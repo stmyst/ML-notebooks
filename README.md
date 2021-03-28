@@ -1,12 +1,12 @@
-## Несколько моих статей и ноутбуков по теме ML
+## Несколько моих статей и ноутбуков 
 
-Статьи:
+Статьи по теме ML:
 
 <a href="https://github.com/stmyst/ML-notebooks/blob/master/hyperopt.ipynb">1. Подбор гиперпараметров модели с помощью Hyperopt.</a> 
 
 <a href="https://github.com/stmyst/ML-notebooks/blob/master/feature_selection_part1.ipynb">2. Отбор признаков в задачах машинного обучения. Часть 1.</a> 
 
-Ноутбуки:
+Ноутбуки по теме ML:
 
 <a href="https://github.com/stmyst/ML-notebooks/blob/master/central_limit_theorem.ipynb">1. Центральная предельная теорема своими руками.</a> 
 
