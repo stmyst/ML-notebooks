@@ -1,14 +1,17 @@
 Несколько моих статей и ноутбуков по теме ML:
 
 Статьи:
-1. Подбор гиперпараметров модели с помощью Hyperopt.
-2. Отбор признаков в задачах машинного обучения. Часть 1.
+<a href="https://github.com/stmyst/ML-notebooks/blob/master/hyperopt.ipynb ">1. Подбор гиперпараметров модели с помощью Hyperopt.</a> 
+
+<a href="http://ceur-ws.org/Vol-1452/paper3.pdf ">2. Отбор признаков в задачах машинного обучения. Часть 1.</a> 
 
 Ноутбуки:
 
-1. Центральная предельная теорема своими руками.
-2. Baseline решение для ML соревнования.
-3. CS224n task 1.
+<a href="https://github.com/stmyst/ML-notebooks/blob/master/central_limit_theorem.ipynb">1. Центральная предельная теорема своими руками.</a> 
+
+<a href="https://github.com/stmyst/ML-notebooks/blob/master/competition_baseline.ipynb">2. Baseline решение для ML соревнования (СБЕР).</a> 
+
+<a href="https://github.com/stmyst/ML-notebooks/blob/master/task1_exploration.ipynb">3. CS224n task 1.</a>  
 
 
 Публикации по другим темам:
