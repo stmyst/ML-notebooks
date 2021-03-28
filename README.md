@@ -1,9 +1,10 @@
 Несколько моих статей и ноутбуков по теме ML:
 
 Статьи:
-<a href="https://github.com/stmyst/ML-notebooks/blob/master/hyperopt.ipynb ">1. Подбор гиперпараметров модели с помощью Hyperopt.</a> 
 
-<a href="http://ceur-ws.org/Vol-1452/paper3.pdf ">2. Отбор признаков в задачах машинного обучения. Часть 1.</a> 
+<a href="https://github.com/stmyst/ML-notebooks/blob/master/hyperopt.ipynb">1. Подбор гиперпараметров модели с помощью Hyperopt.</a> 
+
+<a href="https://github.com/stmyst/ML-notebooks/blob/master/feature_selection_part1.ipynb">2. Отбор признаков в задачах машинного обучения. Часть 1.</a> 
 
 Ноутбуки:
 
