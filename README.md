@@ -1,6 +1,6 @@
 ## Несколько моих статей и ноутбуков 
 
-### Статьи по теме ML:
+### Статьи по теме ML (NTA, Habr):
 
 [1. Подбор гиперпараметров модели с помощью Hyperopt.](https://github.com/stmyst/ML-notebooks/blob/master/hyperopt.ipynb)
 
