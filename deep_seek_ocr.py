@@ -2,10 +2,10 @@
 # requirements: pdfplumber, openai, tqdm
 """Simple DeepSeek OCR converter for pdf files"""
 
+import asyncio
 import base64
 import io
 import time
-from asyncio import Semaphore
 
 import pdfplumber
 from openai import AsyncOpenAI
@@ -18,20 +18,20 @@ from tqdm.asyncio import tqdm
 
 
 async def process_pdf_file(
-    pdf_file: str,
+    path_to_pdf_file: str,
     client: AsyncOpenAI,
     prompt: str,
-    semaphore_slots: int = 50,
+    semaphore_slots: int = 50, # To control the number of concurrent workers
     dpi: int = 300
 ) -> None:
-    print(f'received {pdf_file}')
-    images = _cut_file_to_images(file=pdf_file, dpi=dpi)
+    print(f'received {path_to_pdf_file}')
+    images = _cut_file_to_images(file=path_to_pdf_file, dpi=dpi)
 
     recognized_pages = await _ocr_images(
         images=images, client=client, prompt=prompt, semaphore_slots=semaphore_slots,
     )
 
-    _save_ocr_results(recognized_pages=recognized_pages, file=pdf_file)
+    _save_ocr_results(recognized_pages=recognized_pages, file=path_to_pdf_file)
 
 
 def _cut_file_to_images(file: str, dpi: int) -> list[str]:
@@ -48,7 +48,9 @@ def _cut_file_to_images(file: str, dpi: int) -> list[str]:
 async def _ocr_images(
     images: list[str], client: AsyncOpenAI, prompt: str, semaphore_slots: int
 ) -> list[str]:
-    semaphore = Semaphore(semaphore_slots)
+
+    # To control the number of concurrent workers
+    semaphore = asyncio.Semaphore(semaphore_slots)
     text_prompt = ChatCompletionContentPartTextParam(type='text', text=prompt)
     tasks = [
         _prompt_to_model(
@@ -66,7 +68,7 @@ async def _ocr_images(
 
 
 async def _prompt_to_model(
-    semaphore: Semaphore,
+    semaphore: asyncio.Semaphore,
     client: AsyncOpenAI,
     content: list[ChatCompletionContentPartTextParam | ChatCompletionContentPartImageParam],
 ) -> str | None:
@@ -86,7 +88,6 @@ async def _prompt_to_model(
 
 
 def _save_ocr_results(recognized_pages: list[str | None], file: str) -> None:
-
     to_save = f'{file}.txt'
     with open(to_save, 'w', encoding='utf-8') as f:
         for page_idx, page in enumerate(recognized_pages, start=1):
@@ -99,7 +100,6 @@ def _save_ocr_results(recognized_pages: list[str | None], file: str) -> None:
 
 
 if __name__ == '__main__':
-    import asyncio
 
     async def process_pdfs():
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
         for file in files:
             start_time = time.perf_counter()
             await process_pdf_file(
-                pdf_file=f'{path}\\{file}', client=aclient, prompt='<image>\nFree OCR.'
+                path_to_pdf_file=f'{path}\\{file}', client=aclient, prompt='<image>\nFree OCR.'
             )
             elapsed = (time.perf_counter() - start_time) / 60
             print(f'processed {file}, for {elapsed:.2f} min')
