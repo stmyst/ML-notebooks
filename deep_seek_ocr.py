@@ -1,5 +1,5 @@
 # Stepan Martiugin https://t.me/compmtx
-# requirements: pymupdf, openai, tqdm
+# requirements: pdfplumber, openai, tqdm
 """Simple DeepSeek OCR converter for pdf files"""
 
 import base64
@@ -7,8 +7,7 @@ import io
 import time
 from asyncio import Semaphore
 
-import pymupdf
-from PIL import Image
+import pdfplumber
 from openai import AsyncOpenAI
 from openai.types.chat import (
     ChatCompletionUserMessageParam,
@@ -23,7 +22,7 @@ async def process_pdf_file(
     client: AsyncOpenAI,
     prompt: str,
     semaphore_slots: int = 50,
-    dpi: int = 200
+    dpi: int = 300
 ) -> None:
     print(f'received {pdf_file}')
     images = _cut_file_to_images(file=pdf_file, dpi=dpi)
@@ -35,27 +34,13 @@ async def process_pdf_file(
     _save_ocr_results(recognized_pages=recognized_pages, file=pdf_file)
 
 
-def _save_ocr_results(recognized_pages: list[str | None], file: str) -> None:
-
-    to_save = f'{file}.txt'
-    with open(to_save, 'w', encoding='utf-8') as f:
-        for page_idx, page in enumerate(recognized_pages, start=1):
-            if page is None:
-                print(f'page {page_idx} was not recognized')
-            else:
-                f.write(page)
-                f.write('\n\n')
-        print(f'saved to {to_save}')
-
-
 def _cut_file_to_images(file: str, dpi: int) -> list[str]:
     images = []
-    with pymupdf.open(file) as pdf_doc:
-        for page in pdf_doc:
-            pix = page.get_pixmap(dpi=dpi)
-            image_rgb = Image.frombytes(mode='RGB', size=[pix.width, pix.height], data=pix.samples)
+    with pdfplumber.open(file) as pdf_doc:
+        for page in pdf_doc.pages:
+            image = page.to_image(resolution=dpi, antialias=True)
             with io.BytesIO() as buffer:
-                image_rgb.save(buffer, format='PNG')
+                image.save(buffer, format='PNG')
                 images.append(base64.b64encode(buffer.getvalue()).decode('utf-8'))
         return images
 
@@ -98,6 +83,19 @@ async def _prompt_to_model(
     except Exception as error:
         print(f'error {error}')
         return None
+
+
+def _save_ocr_results(recognized_pages: list[str | None], file: str) -> None:
+
+    to_save = f'{file}.txt'
+    with open(to_save, 'w', encoding='utf-8') as f:
+        for page_idx, page in enumerate(recognized_pages, start=1):
+            if page is None:
+                print(f'page {page_idx} was not recognized')
+            else:
+                f.write(page)
+                f.write('\n\n')
+        print(f'saved to {to_save}')
 
 
 if __name__ == '__main__':
